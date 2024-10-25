@@ -12,7 +12,6 @@ const corsOptions = {
 const bodyParser = require('body-parser');
 var cors = require('cors');
 
-
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
@@ -53,8 +52,11 @@ app.get('/db', async (req, res) => {
       res.status(500).send('Error fetching users');
       return;
     }
+    console.log("results", results);
     res.json(results);
   });
+  console.log('En el get db');
+  
 });
 
 process.on('uncaughtException', function (err) {
@@ -64,5 +66,7 @@ process.on('uncaughtException', function (err) {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+console.log('log por fuera!');
+
 
 module.exports = app;
