@@ -39,25 +39,23 @@ app.get('/', (req, res) => {
   <title>node y express</title>
   </head>
   <body>
-  <h1>Soy un proyecto de EXPRESS CON MYSQL</h1>
+  <h1>Comentada la DB</h1>
   </body>
   </html>`
   res.send(htmlResponse);
 });
 
-app.get('/db', async (req, res) => {
-  db.query('SELECT * FROM users', (err, results) => {
-    if (err) {
-      console.error('Error executing query: ' + err.stack);
-      res.status(500).send('Error fetching users');
-      return;
-    }
-    console.log("results", results);
-    res.json(results);
-  });
-  console.log('En el get db');
-  
-});
+// app.get('/db', async (req, res) => {
+//   db.query('SELECT * FROM users', (err, results) => {
+//     if (err) {
+//       console.error('Error executing query: ' + err.stack);
+//       res.status(500).send('Error fetching users');
+//       return;
+//     }
+//     console.log("results", results);
+//     res.json(results);
+//   });  
+// });
 
 process.on('uncaughtException', function (err) {
   console.log(err);
