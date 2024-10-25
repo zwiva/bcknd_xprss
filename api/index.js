@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
   <title>node y express</title>
   </head>
   <body>
-  <h1>Soy un proyecto</h1>
+  <h1>Soy un proyecto de EXPRESS CON MYSQL</h1>
   </body>
   </html>`
   res.send(htmlResponse);
