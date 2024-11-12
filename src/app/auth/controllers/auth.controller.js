@@ -1,8 +1,12 @@
-const authService = require('../services/auth.service');
+import service from '../services/auth.service.js';
 
-exports.login = (req, res) => {
-  const result = authService.login(req.body);
-  if (!result.success)
-    res.status(401).json(result.response);
-  res.status(200).json(result.response);
+const login = async (req, res) => {
+  const response = await service.login(req.body);
+  if (!response.isSuccess)
+    return res.status(response.status).json(response);
+  return res.status(response.status).json(response);
 };
+
+export default {
+  login
+}

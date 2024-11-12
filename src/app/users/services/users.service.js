@@ -1,51 +1,88 @@
-const mysql = require('mysql');
+import { pool } from '../../../shared/services/mysql.service.js';
+const TABLES = {
+  ROLE: 'ROLE',
+  PERSON: 'PERSON',
+  USER: 'USER'
+};
 
-const users = [
-  {
-    id: 1,
-    name: 'Andrea Castro',
-    date: '2024-10-10 21:09:07',
-    roleId: 1,
-    role: 'administrator'
-  },
-  {
-    id: 2,
-    name: 'Luis Miranda',
-    date: '2024-10-11 22:10:08',
-    roleId: 1,
-    role: 'administrator'
+const getAll = async () => {
+  try {
+    const [rows] = await pool.query(`SELECT * from ${TABLES.ROLE}`);
+    pool.releaseConnection();
+    console.log('rows ---->', rows);
+    return rows;
+  } catch (error) {
+    pool.releaseConnection();
   }
-];
-
-const error = {
-  error: 'Authorization error',
-  message: 'Invalid credentials'
 }
 
-exports.getAll = () => {
-  return users;
+const create = async (user) => {
+  await createPerson(user);
+  await createUser(user);
+  return user;
 }
 
-exports.create = (user) => {
-  users.push(user);
-  return users;
+const createPerson = async (person) => {
+  try {
+    const response = await pool.query(
+      `INSERT INTO ${TABLES.PERSON} (
+        name,
+        lastname,
+        surname,
+        rut,
+        email
+      ) VALUES (
+        ${person.name},
+        ${person.lastname},
+        ${person.surname},
+        ${person.rut},
+        ${person.email}
+      );`
+    );
+    pool.releaseConnection();
+    console.log('response createPerson', response);
+  } catch (error) {
+    pool.releaseConnection();
+  }
 }
 
-exports.createUser = async (user) => {
-  const query = `INSERT INTO USERS (
-    name,
-    surname,
-    rut,
-    email,
-    age
-  ) VALUES (
-    '${user.name}',
-    '${user.surname}',
-    '${user.rut}',
-    '${user.email}',
-    ${user.age}
-  )`;
-  // Ejecuta query
-  const result = await mysql.query(query);
-  return result;
+const createUser = async (user) => {
+  try {
+    const response = await pool.query(
+      `INSERT INTO ${TABLES.USER} (
+        email,
+        pass,
+        id_role
+      ) VALUES (
+        ${user.email},
+        ${user.pass},
+        ${user.id_role}
+      );`
+    );
+    pool.releaseConnection();
+    console.log('response createUser', response);
+  } catch (error) {
+    pool.releaseConnection();
+  }
+}
+
+const updateRole = async (id_user, id_role) => {
+  try {
+    const response = await pool.query(
+      `UPDATE
+        ${TABLES.USER}
+      SET
+        id_role = ${id_role}
+      WHERE
+        id = ${id_user};`
+    );
+    pool.releaseConnection();
+  } catch (error) {
+    pool.releaseConnection();
+  }
+}
+
+export default {
+  getAll,
+  create
 }

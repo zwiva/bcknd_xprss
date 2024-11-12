@@ -1,4 +1,6 @@
-const express = require('express');
+import express from 'express';
+import cors from 'cors';
+import { PORT as APP_PORT } from './src/config/config.js';
 const app = express();
 
 // Middlewares
@@ -6,31 +8,32 @@ const logRequest = (req, _, next) => {
   console.log(`Received a ${req.method} request from ${req.ip}`);
   next();
 };
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(logRequest);
 
 // Routes
-const PATH = '/';
-const authRoutes = require('./src/app/auth/routes/auth.route');
-const userRoutes = require('./src/app/users/routes/users.route');
+import authRoutes from './src/app/auth/routes/auth.route.js';
+import usersRoutes from './src/app/users/routes/users.route.js';
 app.use(
-  PATH,
-  userRoutes,
-  authRoutes
+  '/',
+  authRoutes,
+  usersRoutes
 );
 
-// Endpoints
-app.get(PATH, (_, res) => {
+// Endpoint GET
+app.get('/', (_, res) => {
   res.send('Hello World!');
 });
 
-app.post(PATH, (req, res) => {
+// Endpoint POST
+app.post('/', (req, res) => {
   res.send(req.body);
 });
 
 // Init
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || APP_PORT;
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 })

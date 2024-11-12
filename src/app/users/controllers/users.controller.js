@@ -1,16 +1,16 @@
-const userService = require('../services/users.service');
+import service from '../services/users.service.js';
 
-exports.getAll = (_, res) => {
-  const users = userService.getAll();
+const getAll = async (_, res) => {
+  const users = await service.getAll();
   res.status(200).json(users);
 };
 
-exports.create = (req, res) => {
-  const users = userService.create(req.body);
+const create = async (req, res) => {
+  const user = await service.create(req.body);
   res.status(201).json(users);
 };
 
-exports.createUser = (req, res) => {
-  const users = userService.createUser(req.body);
-  res.status(201).json(users);
+export default {
+  getAll,
+  create
 }
