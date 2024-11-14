@@ -13,6 +13,22 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(logRequest);
 
+// Create a MySQL connection
+const db = mysql.createConnection({
+  host: process.env.MYSQLHOST,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQL_DATABASE
+});
+
+db.connect(err => {
+  if (err) {
+    console.error('Error connecting to MySQL:', err);
+    return;
+  }
+  console.log('Connected to MySQL');
+});
+
 // Routes
 import authRoutes from './src/app/auth/routes/auth.route.js';
 import usersRoutes from './src/app/users/routes/users.route.js';
