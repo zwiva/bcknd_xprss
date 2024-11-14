@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+const mysql = require('mysql2');
 import { PORT as APP_PORT } from './src/config/config.js';
 const app = express();
 
