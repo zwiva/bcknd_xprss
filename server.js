@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-const mysql = require('mysql2');
 import { PORT as APP_PORT } from './src/config/config.js';
 const app = express();
 
@@ -13,22 +12,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(logRequest);
-
-// Create a MySQL connection
-const db = mysql.createConnection({
-  host: process.env.MYSQLHOST,
-  user: process.env.MYSQLUSER,
-  password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQL_DATABASE
-});
-
-db.connect(err => {
-  if (err) {
-    console.error('Error connecting to MySQL:', err);
-    return;
-  }
-  console.log('Connected to MySQL');
-});
 
 // Routes
 import authRoutes from './src/app/auth/routes/auth.route.js';
@@ -49,8 +32,8 @@ app.post('/', (req, res) => {
   res.send(req.body);
 });
 
-// Init
-const PORT = process.env.PORT || APP_PORT;
+console.log('process.env.PORT', process.env.PORT);
+const PORT = process.env.PORT ?? APP_PORT;
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
-})
+});

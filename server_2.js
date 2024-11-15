@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 var cors = require('cors');
 const app = express();
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3306;
 
 const corsOptions = {
   origin: '*',
@@ -75,7 +75,7 @@ app.get('/api/protegido', (req, res) => {
     }
 });
 
-app.listen(3000, () => console.log('Servidor en http://localhost:3000'));
+app.listen(3306, () => console.log('Servidor en http://localhost:3306'));
 
 process.on('uncaughtException', function (err) {
   console.log(err);

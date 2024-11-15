@@ -1,12 +1,12 @@
 import mysql from 'mysql2/promise';
-import { MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASS, MYSQL_DB } from '../../config/config.js';
+import { MYSQLHOST, MYSQLPORT, MYSQLUSER, MYSQLPASSWORD, MYSQL_DATABASE } from '../../config/config.js';
 
 const pool = mysql.createPool({
-  host: process.env.MYSQL_HOST || MYSQL_HOST,
-  port: process.env.MYSQL_PORT || MYSQL_PORT,
-  user: process.env.MYSQL_USER || MYSQL_USER,
-  password: process.env.MYSQL_PASS || MYSQL_PASS,
-  database: process.env.MYSQL_DB || MYSQL_DB,
+  host: process.env.MYSQLHOST ?? MYSQLHOST,
+  port: process.env.MYSQLPORT ?? MYSQLPORT,
+  user: process.env.MYSQLUSER ?? MYSQLUSER,
+  password: process.env.MYSQLPASSWORD ?? MYSQLPASSWORD,
+  database: process.env.MYSQL_DATABASE ?? MYSQL_DATABASE,
   waitForConnections: true,
   connectionLimit: 10,
   maxIdle: 10,

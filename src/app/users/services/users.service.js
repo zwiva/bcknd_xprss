@@ -2,12 +2,12 @@ import { pool } from '../../../shared/services/mysql.service.js';
 const TABLES = {
   ROLE: 'ROLE',
   PERSON: 'PERSON',
-  USER: 'USER'
+  USER: 'USERS'
 };
 
 const getAll = async () => {
   try {
-    const [rows] = await pool.query(`SELECT * from ${TABLES.ROLE}`);
+    const [rows] = await pool.query(`SELECT * from ${TABLES.USER}`);
     pool.releaseConnection();
     console.log('rows ---->', rows);
     return rows;
