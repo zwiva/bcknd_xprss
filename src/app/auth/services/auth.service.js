@@ -34,6 +34,7 @@ const login = async (credentials) => {
       return handlerHttpResponse(401, 'Credenciales no válidas', false);
     return await getUserPersonRole(user.id);
   } catch (e) {
+    console.log(e);
     return handlerHttpResponse(409, e, false);
   }
 };
@@ -67,6 +68,7 @@ const getUserPersonRole = async (id) => {
       return handlerHttpResponse(404, 'Usuario no encontrado', false);
     return handlerHttpResponse(200, 'Éxito', true, { ...rows[0], id_user: id });
   } catch (e) {
+    console.log(e);
     return handlerHttpResponse(409, e, false);
   }
 }
