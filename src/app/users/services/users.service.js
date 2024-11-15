@@ -7,7 +7,7 @@ const TABLES = {
 
 const getAll = async () => {
   try {
-    console.log('pool', pool);
+    console.log('************', `SELECT * from ${TABLES.USER}`);
     const [rows] = await pool.query(`SELECT * from ${TABLES.USER}`);
     pool.releaseConnection();
     console.log('rows ---->', rows);
