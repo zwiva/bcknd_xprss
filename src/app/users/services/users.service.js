@@ -1,8 +1,5 @@
-import mysql from 'mysql2/promise';
-
-import { CONNECTION } from '../../../connection/connection.js';
+import mysql from '../../../shared/services/mysql.service.js'
 import { handlerHttpResponse } from '../../../shared/services/utils.service.js';
-import { query } from '../../../shared/services/mysql2.service.js'
 
 const TABLES = {
   ROLE: 'ROLE',
@@ -22,12 +19,18 @@ const TABLES = {
 
 const getAll = async () => {
   try {
-    const results = await query(true, `SELECT * FROM ${TABLES.USER}`);
-    // const results = await query(true, `SELECT * FROM ?`, [TABLES.USER]);
-    const queryResult = results[0];
+    const queryResult = await mysql.query(
+      true,
+      `SELECT
+        id,
+        id_role,
+        email
+      FROM
+        ${TABLES.USER}`
+    );
     return handlerHttpResponse(200, queryResult);
   } catch (e) {
-    return handlerHttpResponse(409, e);
+    return handlerHttpResponse(409, null, e);
   }
 }
 
@@ -37,14 +40,56 @@ const create = async (user) => {
     await createUser(user);
     return handlerHttpResponse(201);
   } catch (e) {
-    return handlerHttpResponse(409, e);
+    return handlerHttpResponse(409, null, e);
   }
 }
 
+// const createPerson = async (person) => {
+//   try {
+//     const connection = await mysql.createConnection(CONNECTION);
+//     await connection.query(
+//       `INSERT INTO ${TABLES.PERSON} (
+//         name,
+//         lastname,
+//         surname,
+//         rut,
+//         email
+//       ) VALUES (
+//         ${person.name},
+//         ${person.lastname},
+//         ${person.surname},
+//         ${person.rut},
+//         ${person.email}
+//       );`
+//     );
+//   } catch (e) {
+//     throw new Error(e);
+//   }
+// }
+
+// const createUser = async (user) => {
+//   try {
+//     const connection = await mysql.createConnection(CONNECTION);
+//     await connection.query(
+//       `INSERT INTO ${TABLES.USER} (
+//         email,
+//         pass,
+//         id_role
+//       ) VALUES (
+//         ${user.email},
+//         ${user.pass},
+//         ${user.id_role}
+//       );`
+//     );
+//   } catch (e) {
+//     throw new Error(e);
+//   }
+// }
+
 const createPerson = async (person) => {
   try {
-    const connection = await mysql.createConnection(CONNECTION);
-    await connection.query(
+    await mysql.query(
+      true,
       `INSERT INTO ${TABLES.PERSON} (
         name,
         lastname,
@@ -52,12 +97,19 @@ const createPerson = async (person) => {
         rut,
         email
       ) VALUES (
-        ${person.name},
-        ${person.lastname},
-        ${person.surname},
-        ${person.rut},
-        ${person.email}
-      );`
+        ?,
+        ?,
+        ?,
+        ?,
+        ?
+      );`,
+      [
+        person.name,
+        person.lastname,
+        person.surname,
+        person.rut,
+        person.email
+      ]
     );
   } catch (e) {
     throw new Error(e);
@@ -66,42 +118,29 @@ const createPerson = async (person) => {
 
 const createUser = async (user) => {
   try {
-    const connection = await mysql.createConnection(CONNECTION);
-    await connection.query(
+    await mysql.query(
+      true,
       `INSERT INTO ${TABLES.USER} (
         email,
         pass,
         id_role
       ) VALUES (
-        ${user.email},
-        ${user.pass},
-        ${user.id_role}
-      );`
+        ?,
+        ?,
+        ?
+      );`,
+      [
+        user.email,
+        user.pass,
+        user.id_role
+      ]
     );
   } catch (e) {
     throw new Error(e);
   }
 }
 
-const updateRole = async (id_user, id_role) => {
-  try {
-    const connection = await mysql.createConnection(CONNECTION);
-    await connection.query(
-      `UPDATE
-        ${TABLES.USER}
-      SET
-        id_role = ${id_role}
-      WHERE
-        id = ${id_user};`
-    );
-    return handlerHttpResponse(204);
-  } catch (e) {
-    return handlerHttpResponse(409, e);
-  }
-}
-
 export default {
   getAll,
-  create,
-  updateRole
+  create
 }

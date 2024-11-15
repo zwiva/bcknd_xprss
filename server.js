@@ -5,7 +5,6 @@ const app = express();
 
 // Middlewares
 const logRequest = (req, _, next) => {
-  // console.log('req', req)
   console.log(`Received a ${req.method} request from ${req.ip} to the "${req.originalUrl}" path`);
   next();
 };
@@ -33,6 +32,7 @@ app.post('/', (req, res) => {
   res.send(req.body);
 });
 
+// Listen
 app.listen(CONFIG.PORT, () => {
   console.log(`App listening on port ${CONFIG.PORT}, environment ${CONFIG.ENVIRONMENT}`);
 });

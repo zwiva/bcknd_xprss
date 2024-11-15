@@ -10,7 +10,7 @@ const connection = {
   database: CONFIG.MYSQL_DATABASE
 };
 
-export const query = async (isMultiple, sql, values = []) => {
+const query = async (isMultiple, sql, values = []) => {
   try {
     const conn = await mysql.createConnection(connection);
     const [queryResult] = await conn.query(sql, values);
@@ -21,6 +21,11 @@ export const query = async (isMultiple, sql, values = []) => {
   }
 }
 
-export const format = async (sql, values = []) => {
+const format = async (sql, values = []) => {
   return (await mysql.createConnection(connection)).format(sql, values);
+}
+
+export default {
+  query,
+  format
 }
