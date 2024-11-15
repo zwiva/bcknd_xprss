@@ -11,8 +11,9 @@ const TABLES = {
 
 const getAll = async () => {
   try {
+    console.log('config =>', config);
     const connection = await mysql.createConnection(config);
-    console.log('connection =>', connection);
+    console.log('query =>', `SELECT * FROM ${TABLES.USER}`);
     const [results] = await connection.query(`SELECT * FROM ${TABLES.USER}`);
     console.log('results =>', results);
     return handlerHttpResponse(200, 'Éxito', true, results);

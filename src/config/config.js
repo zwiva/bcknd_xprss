@@ -6,7 +6,7 @@
 // const MYSQL_DB = 'diario';
 // const JWT_SECRET = 'holabebe';
 
-const ENVIRONMENT = process.env.ENVIRONMENT ?? 3000;
+const ENVIRONMENT = process.env.ENVIRONMENT ?? 'local';
 const PORT = process.env.PORT ?? 3000;
 const MYSQL_DB_URL = process.env.MYSQL_DB_URL ?? 'mysql://root:tEfLOHDWCHMcUcMrJqZIKqHSKroJeDqP@mysql.railway.internal:3306/railway';
 const MYSQLHOST = process.env.MYSQLHOST ?? 'mysql.railway.internal';
@@ -17,6 +17,7 @@ const MYSQL_DATABASE = process.env.MYSQL_DATABASE ?? 'railway';
 const JWT_SECRET = process.env.JWT_SECRET ?? 'holabebe';
 
 export {
+  ENVIRONMENT,
   PORT,
   MYSQL_DB_URL,
   MYSQLHOST,
