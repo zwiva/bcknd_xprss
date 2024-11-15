@@ -66,7 +66,7 @@ const getUserPersonRole = async (id_user, email) => {
     );
     if (!results.length)
       return handlerHttpResponse(404, 'Usuario no encontrado', false);
-    return handlerHttpResponse(200, 'Éxito', true, { ...rows[0], id_user, email });
+    return handlerHttpResponse(200, 'Éxito', true, { ...results[0], id_user, email });
   } catch (e) {
     console.log(e);
     return handlerHttpResponse(409, e, false);
