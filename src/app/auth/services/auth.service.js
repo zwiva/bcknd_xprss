@@ -62,7 +62,7 @@ const getUserPersonRole = async (id_user, email) => {
       ON
         r.id = u.id_role
       WHERE
-        u.id = ${id}`
+        u.id = ${id_user}`
     );
     if (!results.length)
       return handlerHttpResponse(404, 'Usuario no encontrado', false);
