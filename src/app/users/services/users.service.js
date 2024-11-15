@@ -12,7 +12,9 @@ const TABLES = {
 const getAll = async () => {
   try {
     const connection = await mysql.createConnection(config);
+    console.log('connection =>', connection);
     const [results] = await connection.query(`SELECT * FROM ${TABLES.USER}`);
+    console.log('results =>', results);
     return handlerHttpResponse(200, 'Éxito', true, results);
   } catch (e) {
     return handlerHttpResponse(409, e, false);
@@ -80,7 +82,7 @@ const updateRole = async (id_user, id_role) => {
       WHERE
         id = ${id_user};`
     );
-    return handlerHttpResponse(204, 'Successful', true);
+    return handlerHttpResponse(204, 'Éxito', true);
   } catch (e) {
     return handlerHttpResponse(409, e, false);
   }
