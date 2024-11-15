@@ -1,5 +1,7 @@
-import { pool } from '../../../shared/services/mysql.service.js';
+import mysql from 'mysql2/promise';
+
 import { hash, compare } from '../../../shared/services/bcrypt.service.js';
+import { config } from '../../../shared/services/mysql.service.js';
 import { handlerHttpResponse } from '../../../shared/services/utils.service.js';
 
 const TABLES = {
@@ -10,7 +12,10 @@ const TABLES = {
 
 const login = async (credentials) => {
   try {
-    const [rows] = await pool.query(
+    if (!credentials.email || !credentials.pass)
+      return handlerHttpResponse(400, e, false);
+    const connection = await mysql.createConnection(config);
+    const [results] = await connection.query(
       `SELECT
         u.id,
         u.pass
@@ -19,23 +24,23 @@ const login = async (credentials) => {
       WHERE
         u.email = '${credentials.email}'`
     );
-    pool.releaseConnection();
-    if (!rows.length)
+    if (!results.length)
       return handlerHttpResponse(404, 'Usuario no encontrado', false);
-    const [user] = rows;
+    const [user] = results;
+    if (!user.id || !user.pass)
+      return handlerHttpResponse(409, e, false);
     const isValidPassword = await compare(credentials.pass, user.pass);
     if (!isValidPassword)
       return handlerHttpResponse(401, 'Credenciales no válidas', false);
     return await getUserPersonRole(user.id);
   } catch (e) {
-    pool.releaseConnection();
     return handlerHttpResponse(409, e, false);
   }
 };
 
 const getUserPersonRole = async (id) => {
   try {
-    const [rows] = await pool.query(
+    const [results] = await connection.query(
       `SELECT
         u.email,
         u.id_role,
@@ -58,12 +63,10 @@ const getUserPersonRole = async (id) => {
       WHERE
         u.id = ${id}`
     );
-    pool.releaseConnection();
-    if (!rows.length)
+    if (!results.length)
       return handlerHttpResponse(404, 'Usuario no encontrado', false);
     return handlerHttpResponse(200, 'Successful', true, { ...rows[0], id_user: id });
   } catch (e) {
-    pool.releaseConnection();
     return handlerHttpResponse(409, e, false);
   }
 }

@@ -1,31 +1,38 @@
-import { pool } from '../../../shared/services/mysql.service.js';
+import mysql from 'mysql2/promise';
+
+import { config } from '../../../shared/services/mysql.service.js';
+import { handlerHttpResponse } from '../../../shared/services/utils.service.js';
+
 const TABLES = {
   ROLE: 'ROLE',
   PERSON: 'PERSON',
-  USER: 'USERS'
+  USER: 'USER'
 };
 
 const getAll = async () => {
   try {
-    console.log('************', `SELECT * from ${TABLES.USER}`);
-    const [rows] = await pool.query(`SELECT * from ${TABLES.USER}`);
-    pool.releaseConnection();
-    console.log('rows ---->', rows);
-    return rows;
-  } catch (error) {
-    pool.releaseConnection();
+    const connection = await mysql.createConnection(config);
+    const [results] = await connection.query(`SELECT * FROM ${TABLES.USER}`);
+    return handlerHttpResponse(200, 'Éxito', true, results);
+  } catch (e) {
+    return handlerHttpResponse(409, e, false);
   }
 }
 
 const create = async (user) => {
-  await createPerson(user);
-  await createUser(user);
-  return user;
+  try {
+    await createPerson(user);
+    await createUser(user);
+    return handlerHttpResponse(201, 'Éxito', true);
+  } catch (e) {
+    return handlerHttpResponse(409, e, false);
+  }
 }
 
 const createPerson = async (person) => {
   try {
-    const response = await pool.query(
+    const connection = await mysql.createConnection(config);
+    await connection.query(
       `INSERT INTO ${TABLES.PERSON} (
         name,
         lastname,
@@ -40,16 +47,14 @@ const createPerson = async (person) => {
         ${person.email}
       );`
     );
-    pool.releaseConnection();
-    console.log('response createPerson', response);
-  } catch (error) {
-    pool.releaseConnection();
+  } catch (e) {
+    throw new Error(e);
   }
 }
 
 const createUser = async (user) => {
   try {
-    const response = await pool.query(
+    await connection.query(
       `INSERT INTO ${TABLES.USER} (
         email,
         pass,
@@ -60,16 +65,14 @@ const createUser = async (user) => {
         ${user.id_role}
       );`
     );
-    pool.releaseConnection();
-    console.log('response createUser', response);
-  } catch (error) {
-    pool.releaseConnection();
+  } catch (e) {
+    throw new Error(e);
   }
 }
 
 const updateRole = async (id_user, id_role) => {
   try {
-    const response = await pool.query(
+    await connection.query(
       `UPDATE
         ${TABLES.USER}
       SET
@@ -77,13 +80,14 @@ const updateRole = async (id_user, id_role) => {
       WHERE
         id = ${id_user};`
     );
-    pool.releaseConnection();
-  } catch (error) {
-    pool.releaseConnection();
+    return handlerHttpResponse(204, 'Successful', true);
+  } catch (e) {
+    return handlerHttpResponse(409, e, false);
   }
 }
 
 export default {
   getAll,
-  create
+  create,
+  updateRole
 }

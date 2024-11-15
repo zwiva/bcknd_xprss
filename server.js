@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { PORT as APP_PORT } from './src/config/config.js';
+import { PORT } from './src/config/config.js';
 const app = express();
 
 // Middlewares
@@ -33,7 +33,6 @@ app.post('/', (req, res) => {
 });
 
 console.log('environment ->', process.env.ENVIRONMENT);
-const PORT = process.env.PORT ?? APP_PORT;
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });

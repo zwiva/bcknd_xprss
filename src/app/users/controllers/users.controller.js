@@ -8,7 +8,7 @@ const getAll = async (_, res) => {
 
 const create = async (req, res) => {
   const user = await service.create(req.body);
-  res.status(201).json(users);
+  res.status(201).json(user);
 };
 
 export default {

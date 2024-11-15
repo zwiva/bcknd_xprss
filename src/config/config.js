@@ -6,15 +6,15 @@
 // const MYSQL_DB = 'diario';
 // const JWT_SECRET = 'holabebe';
 
-const PORT = 3000;
-const MYSQL_DB_URL = 'mysql://root:tEfLOHDWCHMcUcMrJqZIKqHSKroJeDqP@mysql.railway.internal:3306/railway';
-const MYSQLHOST = 'mysql.railway.internal';
-const MYSQLPORT = 3306;
-const MYSQLUSER = 'root';
-const MYSQLPASSWORD = 'tEfLOHDWCHMcUcMrJqZIKqHSKroJeDqP';
-const MYSQL_DATABASE = 'railway';
-const MYSQLDATABASE = 'railway';
-const JWT_SECRET = 'holabb';
+const ENVIRONMENT = process.env.ENVIRONMENT ?? 3000;
+const PORT = process.env.PORT ?? 3000;
+const MYSQL_DB_URL = process.env.MYSQL_DB_URL ?? 'mysql://root:tEfLOHDWCHMcUcMrJqZIKqHSKroJeDqP@mysql.railway.internal:3306/railway';
+const MYSQLHOST = process.env.MYSQLHOST ?? 'mysql.railway.internal';
+const MYSQLPORT = process.env.MYSQLPORT ?? 3306;
+const MYSQLUSER = process.env.MYSQLUSER ?? 'root';
+const MYSQLPASSWORD = process.env.MYSQLPASSWORD ?? 'tEfLOHDWCHMcUcMrJqZIKqHSKroJeDqP';
+const MYSQL_DATABASE = process.env.MYSQL_DATABASE ?? 'railway';
+const JWT_SECRET = process.env.JWT_SECRET ?? 'holabebe';
 
 export {
   PORT,
@@ -24,6 +24,5 @@ export {
   MYSQLUSER,
   MYSQLPASSWORD,
   MYSQL_DATABASE,
-  MYSQLDATABASE,
   JWT_SECRET
 }
