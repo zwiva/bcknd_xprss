@@ -2,7 +2,8 @@ import service from '../services/users.service.js';
 
 const getAll = async (_, res) => {
   const users = await service.getAll();
-  res.status(200).json(users);
+  console.log('---->', users);
+  return res.status(200).json(users);
 };
 
 const create = async (req, res) => {
