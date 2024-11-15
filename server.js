@@ -1,11 +1,12 @@
 import express from 'express';
 import cors from 'cors';
-import { PORT } from './src/config/config.js';
+import { CONFIG } from './src/config/config.js';
 const app = express();
 
 // Middlewares
 const logRequest = (req, _, next) => {
-  console.log(`Received a ${req.method} request from ${req.ip}`);
+  // console.log('req', req)
+  console.log(`Received a ${req.method} request from ${req.ip} to the "${req.originalUrl}" path`);
   next();
 };
 app.use(cors());
@@ -32,7 +33,6 @@ app.post('/', (req, res) => {
   res.send(req.body);
 });
 
-console.log('environment ->', process.env.ENVIRONMENT);
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
+app.listen(CONFIG.PORT, () => {
+  console.log(`App listening on port ${CONFIG.PORT}, environment ${CONFIG.ENVIRONMENT}`);
 });

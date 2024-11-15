@@ -1,7 +1,8 @@
 import mysql from 'mysql2/promise';
 
-import { config } from '../../../shared/services/mysql.service.js';
+import { CONNECTION } from '../../../connection/connection.js';
 import { handlerHttpResponse } from '../../../shared/services/utils.service.js';
+import { query } from '../../../shared/services/mysql2.service.js'
 
 const TABLES = {
   ROLE: 'ROLE',
@@ -9,16 +10,24 @@ const TABLES = {
   USER: 'USER'
 };
 
+// const getAll = async () => {
+//   try {
+//     const connection = await mysql.createConnection(CONNECTION);
+//     const [results] = await connection.query(`SELECT * FROM ${TABLES.USER}`);
+//     return handlerHttpResponse(200, 'Éxito', true, results);
+//   } catch (e) {
+//     return handlerHttpResponse(409, e, false);
+//   }
+// }
+
 const getAll = async () => {
   try {
-    console.log('config =>', config);
-    const connection = await mysql.createConnection(config);
-    console.log('query =>', `SELECT * FROM ${TABLES.USER}`);
-    const [results] = await connection.query(`SELECT * FROM ${TABLES.USER}`);
-    console.log('results =>', results);
-    return handlerHttpResponse(200, 'Éxito', true, results);
+    const results = await query(true, `SELECT * FROM ${TABLES.USER}`);
+    // const results = await query(true, `SELECT * FROM ?`, [TABLES.USER]);
+    const queryResult = results[0];
+    return handlerHttpResponse(200, queryResult);
   } catch (e) {
-    return handlerHttpResponse(409, e, false);
+    return handlerHttpResponse(409, e);
   }
 }
 
@@ -26,15 +35,15 @@ const create = async (user) => {
   try {
     await createPerson(user);
     await createUser(user);
-    return handlerHttpResponse(201, 'Éxito', true);
+    return handlerHttpResponse(201);
   } catch (e) {
-    return handlerHttpResponse(409, e, false);
+    return handlerHttpResponse(409, e);
   }
 }
 
 const createPerson = async (person) => {
   try {
-    const connection = await mysql.createConnection(config);
+    const connection = await mysql.createConnection(CONNECTION);
     await connection.query(
       `INSERT INTO ${TABLES.PERSON} (
         name,
@@ -57,6 +66,7 @@ const createPerson = async (person) => {
 
 const createUser = async (user) => {
   try {
+    const connection = await mysql.createConnection(CONNECTION);
     await connection.query(
       `INSERT INTO ${TABLES.USER} (
         email,
@@ -75,6 +85,7 @@ const createUser = async (user) => {
 
 const updateRole = async (id_user, id_role) => {
   try {
+    const connection = await mysql.createConnection(CONNECTION);
     await connection.query(
       `UPDATE
         ${TABLES.USER}
@@ -83,9 +94,9 @@ const updateRole = async (id_user, id_role) => {
       WHERE
         id = ${id_user};`
     );
-    return handlerHttpResponse(204, 'Éxito', true);
+    return handlerHttpResponse(204);
   } catch (e) {
-    return handlerHttpResponse(409, e, false);
+    return handlerHttpResponse(409, e);
   }
 }
 

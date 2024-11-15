@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node server.js",
     "start:dev": "node --watch --env-file=environments/local/.env server.js",
-    "start:qa": "node --watch --env-file=environments/qa/.env server.js",
     "start:prod": "node --watch --env-file=environments/prod/.env server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
