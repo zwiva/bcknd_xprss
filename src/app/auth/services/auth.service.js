@@ -1,6 +1,6 @@
 import mysql from 'mysql2/promise';
 
-import { hash, compare } from '../../../shared/services/bcrypt.service.js';
+import bcrypt from '../../../shared/services/bcrypt.service.js';
 import { config } from '../../../shared/services/mysql.service.js';
 import { handlerHttpResponse } from '../../../shared/services/utils.service.js';
 
@@ -29,7 +29,7 @@ const login = async (credentials) => {
     const [user] = results;
     if (!user.id || !user.pass)
       return handlerHttpResponse(409, e, false);
-    const isValidPassword = await compare(credentials.pass, user.pass);
+    const isValidPassword = await bcrypt.compare(credentials.pass, user.pass);
     if (!isValidPassword)
       return handlerHttpResponse(401, 'Credenciales no válidas', false);
     return await getUserPersonRole(user.id, credentials.email);

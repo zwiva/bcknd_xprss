@@ -9,7 +9,7 @@ const compare = async (data, encrypted) => {
   return await bcryptCompare(data, encrypted);
 }
 
-export {
+export default {
   hash,
   compare
 }
