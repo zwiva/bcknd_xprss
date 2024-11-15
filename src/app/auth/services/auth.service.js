@@ -32,18 +32,18 @@ const login = async (credentials) => {
     const isValidPassword = await compare(credentials.pass, user.pass);
     if (!isValidPassword)
       return handlerHttpResponse(401, 'Credenciales no válidas', false);
-    return await getUserPersonRole(user.id);
+    return await getUserPersonRole(user.id, credentials.email);
   } catch (e) {
     console.log(e);
     return handlerHttpResponse(409, e, false);
   }
 };
 
-const getUserPersonRole = async (id) => {
+const getUserPersonRole = async (id_user, email) => {
   try {
+    const connection = await mysql.createConnection(config);
     const [results] = await connection.query(
       `SELECT
-        u.email,
         u.id_role,
         p.id id_person,
         p.name name,
@@ -66,7 +66,7 @@ const getUserPersonRole = async (id) => {
     );
     if (!results.length)
       return handlerHttpResponse(404, 'Usuario no encontrado', false);
-    return handlerHttpResponse(200, 'Éxito', true, { ...rows[0], id_user: id });
+    return handlerHttpResponse(200, 'Éxito', true, { ...rows[0], id_user, email });
   } catch (e) {
     console.log(e);
     return handlerHttpResponse(409, e, false);
