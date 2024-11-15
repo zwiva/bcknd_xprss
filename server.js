@@ -32,7 +32,7 @@ app.post('/', (req, res) => {
   res.send(req.body);
 });
 
-console.log('process.env.PORT', process.env.PORT);
+console.log('environment ->', process.env.ENVIRONMENT);
 const PORT = process.env.PORT ?? APP_PORT;
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
