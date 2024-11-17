@@ -1,5 +1,9 @@
 # bcknd_xprss
 
-npm init -y
+(npm init -y)
 
-jwt -> npm install express jsonwebtoken dotenv body-parser
+npm install express
+npm install cors
+npm install bcrypt
+npm install mysql2
+npm install jsonwebtoken

@@ -1,6 +1,7 @@
 import bcrypt from '../../../shared/services/bcrypt.service.js';
 import mysql from '../../../shared/services/mysql.service.js';
 import { handlerHttpResponse } from '../../../shared/services/utils.service.js';
+import { signData } from "../../../shared/services/jwt.service.js";
 
 const TABLES = {
   ROLE: 'ROLE',
@@ -30,17 +31,18 @@ const login = async (credentials) => {
     const isValidPassword = await bcrypt.compare(credentials.pass, queryResult.pass);
     if (!isValidPassword)
       return handlerHttpResponse(401, null, 'Credenciales inválidas');
-    return await getUserPersonRole(queryResult.id, credentials.email);
+    return await getDataUser(queryResult.id);
   } catch (e) {
     return handlerHttpResponse(409, null, e);
   }
 };
 
-const getUserPersonRole = async (id_user, email) => {
+const getDataUser = async (id_user) => {
   try {
     const queryResult = await mysql.query(
       false,
       `SELECT
+        u.email,
         u.id_role,
         p.id id_person,
         p.name name,
@@ -64,7 +66,10 @@ const getUserPersonRole = async (id_user, email) => {
     );
     if (!queryResult)
       return handlerHttpResponse(404, null, 'Usuario no encontrado');
-    return handlerHttpResponse(200, { ...queryResult, id_user, email });
+
+    const signedData = await signData({ ...queryResult, id_user })
+
+    return handlerHttpResponse(200, signedData);
   } catch (e) {
     return handlerHttpResponse(409, null, e);
   }
@@ -72,5 +77,5 @@ const getUserPersonRole = async (id_user, email) => {
 
 export default {
   login,
-  getUserPersonRole
+  getDataUser
 }
