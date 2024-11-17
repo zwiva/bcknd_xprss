@@ -1,15 +1,16 @@
-import { hash as bcryptHash, compare as bcryptCompare } from 'bcrypt';
-const BASIC_SALT = 5;
+import { hash, compare } from 'bcrypt';
 
-const hash = async (data) => {
-  return await bcryptHash(data, BASIC_SALT);
+import config from '../../config/config.js';
+
+const hashData = async (data) => {
+  return await hash(data, config.BCRYPT_SALT);
 }
 
-const compare = async (data, encrypted) => {
-  return await bcryptCompare(data, encrypted);
+const compareEncrypted = async (data, encrypted) => {
+  return await compare(data, encrypted);
 }
 
 export default {
-  hash,
-  compare
+  hashData,
+  compareEncrypted
 }

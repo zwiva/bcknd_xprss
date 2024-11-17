@@ -1,20 +1,20 @@
 import mysql from 'mysql2/promise';
 
-import { CONFIG } from '../../config/config.js';
+import config from '../../config/config.js';
 
 const connection = {
-  host: CONFIG.MYSQLHOST,
-  port: CONFIG.MYSQLPORT,
-  user: CONFIG.MYSQLUSER,
-  password: CONFIG.MYSQLPASSWORD,
-  database: CONFIG.MYSQL_DATABASE
+  host: config.MYSQLHOST,
+  port: config.MYSQLPORT,
+  user: config.MYSQLUSER,
+  password: config.MYSQLPASSWORD,
+  database: config.MYSQL_DATABASE
 };
 
-const query = async (isMultiple, sql, values = []) => {
+const query = async (sql, values = []) => {
   try {
     const conn = await mysql.createConnection(connection);
     const [queryResult] = await conn.query(sql, values);
-    return isMultiple ? queryResult : queryResult.length ? queryResult[0] : null;
+    return queryResult;
   } catch (e) {
     const query = await format(sql, values);
     throw new Error(`"${e.message}". Query: "${query}"`);

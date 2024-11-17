@@ -1,10 +1,17 @@
 import jwt from 'jsonwebtoken';
 
-export const signData = async (data) => {
-  const token = jwt.sign(data, process.env.JWT_SECRET, { expiresIn: '72h' });
+import config from '../../config/config.js';
+
+const signData = (data) => {
+  const token = jwt.sign(data, config.JWT_SECRET_KEY, { expiresIn: config.JWT_EXPIRATION });
   return token;
 }
 
-export function verifyToken(token) {
-  return jwt.verify(token, process.env.JWT_SECRET);
+const verifyToken = (token) => {
+  return jwt.verify(token, config.JWT_SECRET_KEY);
+}
+
+export default {
+  signData,
+  verifyToken
 }
