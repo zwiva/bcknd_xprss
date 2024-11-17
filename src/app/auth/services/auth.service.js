@@ -11,7 +11,7 @@ const TABLES = {
 const login = async (credentials) => {
   try {
     if (!credentials.email || !credentials.pass)
-      return handlerHttpResponse(400, null, 'Solicitud errónea');
+      return handlerHttpResponse(400, null, 'Solicitud errónea.');
     const sql = `
     SELECT
       u.id,
@@ -27,14 +27,14 @@ const login = async (credentials) => {
     );
     const result = queryResult.length && queryResult[0];
     if (!result?.id || !result?.pass)
-      return handlerHttpResponse(404, null, 'Usuario no encontrado');
+      return handlerHttpResponse(404, null, 'Usuario no encontrado.');
     const isValidPassword = await bcrypt.compareEncrypted(credentials.pass, result.pass);
     if (!isValidPassword)
-      return handlerHttpResponse(401, null, 'Credenciales inválidas');
+      return handlerHttpResponse(401, null, 'Credenciales inválidas.');
     const response = await usersService.getOne(result.id);
     return { ...response, data: jwt.signData(response.data) };
   } catch (e) {
-    return handlerHttpResponse(409, null, `${e} at auth.service`);
+    return handlerHttpResponse(409, null, `${e} at login method on auth.service file.`);
   }
 };
 

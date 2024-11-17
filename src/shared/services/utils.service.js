@@ -2,9 +2,9 @@ const removeDiacritics = (str) => {
   return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
-const handlerHttpResponse = (status, data = null, error = 'Error') => {
+const handlerHttpResponse = (status, data, error = 'Error desconocido.') => {
   const isSuccess = status > 199 && status < 300;
-  const message = isSuccess ? 'Ejecutado exitosamente' : error?.message ?? error;
+  const message = isSuccess ? 'Ejecutado exitosamente.' : error?.message ?? error;
   return { status, isSuccess, message, data };
 }
 

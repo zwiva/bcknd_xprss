@@ -13,10 +13,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(logRequest);
 
 // Routes
+import articlesRoutes from './src/app/articles/routes/articles.route.js';
 import authRoutes from './src/app/auth/routes/auth.route.js';
 import usersRoutes from './src/app/users/routes/users.route.js';
 app.use(
   '/',
+  articlesRoutes,
   authRoutes,
   usersRoutes
 );

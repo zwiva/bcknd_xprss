@@ -34,7 +34,7 @@ const getAll = async () => {
     const queryResult = await mysql.query(sql);
     return handlerHttpResponse(200, queryResult);
   } catch (e) {
-    return handlerHttpResponse(409, null, `${e} at getAll method on users.service file`);
+    return handlerHttpResponse(409, null, `${e} at getAll method on users.service file.`);
   }
 }
 
@@ -66,10 +66,10 @@ const getOne = async (id_user) => {
     const queryResult = await mysql.query(sql, [id_user]);
     const result = queryResult.length && queryResult[0];
     if (!result?.id_role || !result?.id_person)
-      return handlerHttpResponse(404, null, 'Usuario no encontrado');
+      return handlerHttpResponse(404, null, 'Usuario no encontrado.');
     return handlerHttpResponse(200, { ...result, id_user });
   } catch (e) {
-    return handlerHttpResponse(409, null, `${e} at getOne method on users.service file`);
+    return handlerHttpResponse(409, null, `${e} at getOne method on users.service file.`);
   }
 }
 
@@ -79,7 +79,7 @@ const create = async (user) => {
     await createUser(user);
     return handlerHttpResponse(201);
   } catch (e) {
-    return handlerHttpResponse(409, null, `${e} at create method on users.service file`);
+    return handlerHttpResponse(409, null, `${e} at create method on users.service file.`);
   }
 }
 
