@@ -48,7 +48,6 @@ const getOne = async (id_user) => {
       p.name name,
       p.lastname,
       p.surname,
-      p.rut,
       r.name role
     FROM
       ${TABLES.USER} u

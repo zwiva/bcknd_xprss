@@ -32,7 +32,7 @@ const login = async (credentials) => {
     if (!isValidPassword)
       return handlerHttpResponse(401, null, 'Credenciales inválidas.');
     const response = await usersService.getOne(result.id);
-    return { ...response, data: jwt.signData(response.data) };
+    return { ...response, data: { ...response.data, token: jwt.signData(response.data) } };
   } catch (e) {
     return handlerHttpResponse(409, null, `${e} at login method on auth.service file.`);
   }
