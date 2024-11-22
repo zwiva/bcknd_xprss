@@ -14,13 +14,13 @@ app.use(logRequest);
 
 // Routes
 import articlesRoutes from './src/app/articles/routes/articles.route.js';
+import sectionsRoutes from './src/app/sections/routes/sections.route.js';
 import authRoutes from './src/app/auth/routes/auth.route.js';
 import usersRoutes from './src/app/users/routes/users.route.js';
-import sectionsRouter from './src/app/sections/routes/sections.route.js';
 app.use(
   '/',
-  sectionsRouter,
   articlesRoutes,
+  sectionsRoutes,
   authRoutes,
   usersRoutes
 );

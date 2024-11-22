@@ -1,7 +1,7 @@
-import mysql from '../../../shared/services/mysql.service.js'
+import config from '../../../config/config.js';
+import mysql from '../../../shared/services/mysql.service.js';
 import { handlerHttpResponse, isPaidSubscription } from '../../../shared/services/utils.service.js';
 import sectionsService from '../../sections/services/sections.service.js';
-import config from '../../../config/config.js';
 
 const TABLES = {
   ARTICLE: 'ARTICLE',
@@ -10,8 +10,7 @@ const TABLES = {
   STATUS: 'STATUS',
   SECTION: 'SECTION',
   CONTENT: 'CONTENT',
-  ROLE: 'ROLE',
-  ROLE_ARTICLE: 'ROLE_ARTICLE',
+  ROLE: 'ROLE'
 };
 
 const createBaseQuery = () => {
@@ -36,7 +35,6 @@ const createBaseQuery = () => {
           'createdDate', c.createdDate,
           'updateDate', c.updateDate,
           'paragraph', c.paragraph,
-          'id_article', c.id_article, 
           'img', c.img)
         )
       FROM
@@ -67,7 +65,41 @@ const createBaseQuery = () => {
   `;
 }
 
-const getAllBySection = async (id_section, isPremiumUser) => {
+const getAll = async (user) => {
+  try {
+    const sectionsResult = await sectionsService.getAll();
+    if (!sectionsResult.isSuccess)
+      return handlerHttpResponse(409, null, 'Error obteniendo las secciones');
+    const sections = sectionsResult.data;
+    let articles = []
+    for (let s of sections) {
+      const articleDb = await getArticlesBySectionQuery(s.id, isPaidSubscription(user));
+      articles = [...articles, ...articleDb];
+    }
+    return handlerHttpResponse(200, articles);
+  } catch (e) {
+    return handlerHttpResponse(409, null, `${e} at getAll method on articles.service file.`);
+  }
+}
+
+const getOne = async (id) => {
+  try {
+    id = Number(id);
+    if (isNaN(id) || id < 1)
+      return handlerHttpResponse(400, null, 'Solicitud errónea');
+    const sql = `
+    ${createBaseQuery()}
+    WHERE
+      a.id = ?;
+    `;
+    const queryResult = await mysql.query(sql, [id]);
+    return handlerHttpResponse(200, queryResult);
+  } catch (e) {
+    return handlerHttpResponse(409, null, `${e} at getOne method on articles.service file.`);
+  }
+}
+
+const getArticlesBySectionQuery = async (id_section, isPremiumUser) => {
   const queryAppend = isPremiumUser ? '' : `LIMIT ${config.FREE_SUBSCRIPTION_LIMIT}`;
   const sql = `
   SELECT
@@ -88,67 +120,44 @@ const getAllBySection = async (id_section, isPremiumUser) => {
   return queryResult;
 }
 
-const getAll = async (user) => {
+const getArticlesBySection = async (id_section, user) => {
   try {
-    const sectionsResult = await sectionsService.getAll();
-    if (!sectionsResult.isSuccess)
-      return handlerHttpResponse(409, null, 'Error obteniendo las secciones');
-    const sections = sectionsResult.data;
-    let articles = []
-    for (let s of sections) {
-      const articlesDb = await getAllBySection(s.id, isPaidSubscription(user));
-      articles = [...articles, ...articlesDb];
-    }
-    return handlerHttpResponse(200, articles);
+    const articleDb = await getArticlesBySectionQuery(id_section, isPaidSubscription(user));
+    return handlerHttpResponse(200, articleDb);
   } catch (e) {
-    return handlerHttpResponse(409, null, `${e} at getAll method on articles.service file.`);
+    return handlerHttpResponse(409, null, `${e} at getArticleBySection method on articles.service file.`);
   }
 }
 
-const getOne = async (id) => {
+const getLatest = async (number) => {
   try {
-    console.log('------getOne-------', 1);
-    id = Number(id);
-    if (isNaN(id))
+    number = Number(number);
+    if (isNaN(number) || number < 1)
       return handlerHttpResponse(400, null, 'Solicitud errónea');
     const sql = `
-    ${createBaseQuery()}
-    WHERE
-      a.id = ?;
+    SELECT
+      articles.*
+    FROM
+      (
+        ${createBaseQuery()}
+        ORDER BY 
+          a.id DESC
+        LIMIT
+          ${number}
+      ) articles
+    ORDER BY
+      articles.id ASC;
     `;
-    const queryResult = await mysql.query(sql, [id]);
+    const queryResult = await mysql.query(sql);
     return handlerHttpResponse(200, queryResult);
   } catch (e) {
     return handlerHttpResponse(409, null, `${e} at getOne method on articles.service file.`);
   }
 }
 
-const create = async (body, isFree) => {
+const create = async (body, user) => { // pendiente
   try {
-    const sql = `
-    SELECT
-      u.id id_user,
-      u.email,
-      u.id_role,
-      p.id id_person,
-      p.name name,
-      p.lastname,
-      p.surname,
-      p.rut,
-      r.name role
-    FROM
-      ${TABLES.USER} u
-    INNER JOIN
-      ${TABLES.PERSON} p
-    ON
-      p.id = u.id_person
-    INNER JOIN
-      ${TABLES.ROLE} r
-    ON
-      r.id = u.id_role;
-    `;
-    const queryResult = await mysql.query(sql);
-    return handlerHttpResponse(200, queryResult);
+    return handlerHttpResponse(200);
   } catch (e) {
     return handlerHttpResponse(409, null, `${e} at create method on articles.service file.`);
   }
@@ -157,6 +166,7 @@ const create = async (body, isFree) => {
 export default {
   getAll,
   getOne,
-  getAllBySection,
+  getArticlesBySection,
+  getLatest,
   create
 }

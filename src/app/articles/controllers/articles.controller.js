@@ -10,19 +10,25 @@ const getOne = async (req, res) => {
   res.status(response.status).json(response);
 }
 
-const getAllBySection = async (req, res) => {
-  const response = await service.getAllBySection(req.params, req.user === undefined);
+const getArticlesBySection = async (req, res) => {
+  const response = await service.getArticlesBySection(req.params.id, req.user);
+  res.status(response.status).json(response);
+}
+
+const getLatest = async (req, res) => {
+  const response = await service.getLatest(req.params.number);
   res.status(response.status).json(response);
 }
 
 const create = async (req, res) => {
-  const response = await service.create(req.body, req.user === undefined);
+  const response = await service.create(req.body, req.user);
   res.status(response.status).json(response);
 }
 
 export default {
   getAll,
   getOne,
-  getAllBySection,
+  getArticlesBySection,
+  getLatest,
   create
 }
