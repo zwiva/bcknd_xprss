@@ -16,8 +16,10 @@ app.use(logRequest);
 import articlesRoutes from './src/app/articles/routes/articles.route.js';
 import authRoutes from './src/app/auth/routes/auth.route.js';
 import usersRoutes from './src/app/users/routes/users.route.js';
+import sectionsRouter from './src/app/sections/routes/sections.route.js';
 app.use(
   '/',
+  sectionsRouter,
   articlesRoutes,
   authRoutes,
   usersRoutes

@@ -13,7 +13,7 @@ const setReqUser = (user, req, next) => {
   next();
 }
 
-export const validateRequiredToken = (req, res, next) => {
+const validateRequiredToken = (req, res, next) => {
   try {
     const token = getAuthHeader(req.headers);
     if (!token)
@@ -25,9 +25,9 @@ export const validateRequiredToken = (req, res, next) => {
   } catch (e) {
     return res.status(409).json(handlerHttpResponse(409, null, `${e} at authenticateToken method on authentication.middleware file.`));
   }
-};
+}
 
-export const validateSubscriptionToken = (req, _, next) => {
+const validateSubscriptionToken = (req, _, next) => {
   try {
     const token = getAuthHeader(req.headers);
     if (!token)
@@ -39,4 +39,9 @@ export const validateSubscriptionToken = (req, _, next) => {
   } catch (e) {
     next();
   }
-};
+}
+
+export {
+  validateRequiredToken,
+  validateSubscriptionToken
+}

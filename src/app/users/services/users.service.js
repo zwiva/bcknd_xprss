@@ -1,4 +1,5 @@
-import mysql from '../../../shared/services/mysql.service.js'
+import mysql from '../../../shared/services/mysql.service.js';
+import bcrypt from '../../../shared/services/bcrypt.service.js';
 import { handlerHttpResponse } from '../../../shared/services/utils.service.js';
 
 const TABLES = {
@@ -25,7 +26,7 @@ const getAll = async () => {
     INNER JOIN
       ${TABLES.PERSON} p
     ON
-      p.email = u.email
+      p.id = u.id_person
     INNER JOIN
       ${TABLES.ROLE} r
     ON
@@ -54,7 +55,7 @@ const getOne = async (id_user) => {
     INNER JOIN
       ${TABLES.PERSON} p
     ON
-      p.email = u.email
+      p.id = u.id_person
     INNER JOIN
       ${TABLES.ROLE} r
     ON
@@ -74,8 +75,7 @@ const getOne = async (id_user) => {
 
 const create = async (user) => {
   try {
-    await createPerson(user);
-    await createUser(user);
+    await Promise.all([createPerson(user), createUser(user)]);
     return handlerHttpResponse(201);
   } catch (e) {
     return handlerHttpResponse(409, null, `${e} at create method on users.service file.`);
@@ -100,11 +100,13 @@ const createPerson = async (person) => {
     );`;
     await mysql.query(
       sql,
-      [person.name,
-      person.lastname,
-      person.surname,
-      person.rut,
-      person.email]
+      [
+        person.name,
+        person.lastname,
+        person.surname,
+        person.rut,
+        person.email
+      ]
     );
   } catch (e) {
     throw new Error(e);
@@ -112,6 +114,7 @@ const createPerson = async (person) => {
 }
 
 const createUser = async (user) => {
+  const pass = await bcrypt.hashData(user.pass);
   try {
     const sql = `
     INSERT INTO ${TABLES.USER} (
@@ -125,9 +128,11 @@ const createUser = async (user) => {
     );`;
     await mysql.query(
       sql,
-      [user.email,
-      user.pass,
-      user.id_role]
+      [
+        user.email,
+        pass,
+        user.id_role
+      ]
     );
   } catch (e) {
     throw new Error(e);

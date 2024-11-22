@@ -2,6 +2,7 @@ const config = {
   // APP
   ENVIRONMENT: process.env.ENVIRONMENT ?? 'local',
   PORT: process.env.PORT ?? 3000,
+  FREE_SUBSCRIPTION_LIMIT: process.env.FREE_SUBSCRIPTION_LIMIT ?? 3,
 
   // MYSQL
   MYSQLHOST: process.env.MYSQLHOST ?? '127.0.0.1',
