@@ -16,7 +16,12 @@ const getArticlesBySection = async (req, res) => {
 }
 
 const getLatest = async (req, res) => {
-  const response = await service.getLatest(req.params.number);
+  const response = await service.getLatest(req.user, req.params.number);
+  res.status(response.status).json(response);
+}
+
+const getLatestBySection = async (req, res) => {
+  const response = await service.getLatestBySection(req.params.number);
   res.status(response.status).json(response);
 }
 
@@ -30,5 +35,6 @@ export default {
   getOne,
   getArticlesBySection,
   getLatest,
+  getLatestBySection,
   create
 }

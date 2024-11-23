@@ -120,6 +120,47 @@ const getArticlesBySectionQuery = async (id_section, isPremiumUser) => {
   return queryResult;
 }
 
+const getLatestBySection = async (number) => { //short
+  try {
+    number = Number(number);
+    if (isNaN(number) || number < 1)
+      return handlerHttpResponse(400, null, 'Solicitud errónea');
+    const sectionsResult = await sectionsService.getAll();
+    if (!sectionsResult.isSuccess)
+      return handlerHttpResponse(409, null, 'Error obteniendo las secciones');
+    const sections = sectionsResult.data;
+    let articles = []
+    for (let s of sections) {
+      const articleDb = await getArticlesBySectionLastQuery(s.id, number);
+      articles = [...articles, ...articleDb];
+    }
+    return handlerHttpResponse(200, articles);
+  } catch (e) {
+    return handlerHttpResponse(409, null, `${e} at getAll method on articles.service file.`);
+  }
+}
+
+const getArticlesBySectionLastQuery = async (id_section, number) => {
+  const sql = `
+  SELECT
+    articles.*
+  FROM
+    (
+      ${createBaseQuery()}
+      WHERE
+        se.id = ?
+      ORDER BY 
+        a.id DESC
+      LIMIT
+        ${number}
+    ) articles
+  ORDER BY
+    articles.id ASC;
+  `;
+  const queryResult = await mysql.query(sql, [id_section]);
+  return queryResult;
+}
+
 const getArticlesBySection = async (id_section, user) => {
   try {
     const articleDb = await getArticlesBySectionQuery(id_section, isPaidSubscription(user));
@@ -129,11 +170,13 @@ const getArticlesBySection = async (id_section, user) => {
   }
 }
 
-const getLatest = async (number) => {
+const getLatest = async (user, number) => {
   try {
+    const isPremiumUser = isPaidSubscription(user);
     number = Number(number);
     if (isNaN(number) || number < 1)
       return handlerHttpResponse(400, null, 'Solicitud errónea');
+    number = isPremiumUser ? number : 3;
     const sql = `
     SELECT
       articles.*
@@ -151,7 +194,7 @@ const getLatest = async (number) => {
     const queryResult = await mysql.query(sql);
     return handlerHttpResponse(200, queryResult);
   } catch (e) {
-    return handlerHttpResponse(409, null, `${e} at getOne method on articles.service file.`);
+    return handlerHttpResponse(409, null, `${e} at getLatest method on articles.service file.`);
   }
 }
 
@@ -168,5 +211,6 @@ export default {
   getOne,
   getArticlesBySection,
   getLatest,
+  getLatestBySection,
   create
 }
