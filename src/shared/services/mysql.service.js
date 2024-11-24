@@ -14,6 +14,7 @@ const query = async (sql, values = []) => {
   try {
     const conn = await mysql.createConnection(connection);
     const [queryResult] = await conn.query(sql, values);
+    conn.end();
     return queryResult;
   } catch (e) {
     const query = await format(sql, values);
@@ -40,49 +41,49 @@ export default {
 
 // // Configuración de conexión
 // const dbConfig = {
-//     host: 'localhost',
-//     user: 'root',
-//     password: 'password',
-//     database: 'mi_base_de_datos'
+//   host: 'localhost',
+//   user: 'root',
+//   password: 'password',
+//   database: 'mi_base_de_datos'
 // };
 
 // // Ruta con conexión individual
 // app.get('/datos', (req, res) => {
-//     // Crear conexión para la solicitud actual
-//     const connection = mysql.createConnection(dbConfig);
+//   // Crear conexión para la solicitud actual
+//   const connection = mysql.createConnection(dbConfig);
 
-//     // Conectar a la base de datos
-//     connection.connect((err) => {
+//   // Conectar a la base de datos
+//   connection.connect((err) => {
+//     if (err) {
+//       console.error('Error al conectar a la base de datos:', err);
+//       res.status(500).send('Error en el servidor al conectar la base de datos');
+//       return;
+//     }
+//     console.log('Conexión establecida');
+
+//     // Ejecutar la consulta
+//     connection.query('SELECT * FROM tabla', (err, results) => {
+//       if (err) {
+//         console.error('Error en la consulta:', err);
+//         res.status(500).send('Error en el servidor durante la consulta');
+//       } else {
+//         res.send(results);
+//       }
+
+//       // Cerrar la conexión después de usarla
+//       connection.end((err) => {
 //         if (err) {
-//             console.error('Error al conectar a la base de datos:', err);
-//             res.status(500).send('Error en el servidor al conectar la base de datos');
-//             return;
+//           console.error('Error al cerrar la conexión:', err);
+//         } else {
+//           console.log('Conexión cerrada correctamente');
 //         }
-//         console.log('Conexión establecida');
-
-//         // Ejecutar la consulta
-//         connection.query('SELECT * FROM tabla', (err, results) => {
-//             if (err) {
-//                 console.error('Error en la consulta:', err);
-//                 res.status(500).send('Error en el servidor durante la consulta');
-//             } else {
-//                 res.send(results);
-//             }
-
-//             // Cerrar la conexión después de usarla
-//             connection.end((err) => {
-//                 if (err) {
-//                     console.error('Error al cerrar la conexión:', err);
-//                 } else {
-//                     console.log('Conexión cerrada correctamente');
-//                 }
-//             });
-//         });
+//       });
 //     });
+//   });
 // });
 
 // // Iniciar el servidor
 // const PORT = 3000;
 // app.listen(PORT, () => {
-//     console.log(`Servidor corriendo en el puerto ${PORT}`);
+//   console.log(`Servidor corriendo en el puerto ${PORT}`);
 // });
