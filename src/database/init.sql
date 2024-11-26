@@ -716,8 +716,6 @@ SELECT
     SELECT
       JSON_ARRAYAGG(JSON_OBJECT(
         'position', c.position,
-        'createdDate', c.createdDate,
-        'updateDate', c.updateDate,
         'paragraph', c.paragraph,
         'img', c.img
       ))
@@ -746,3 +744,5 @@ INNER JOIN
   SECTION se
 ON
   se.id = a.id_section;
+
+UPDATE ARTICLE SET img = "https://controlpublicidad.com/wp-content/uploads/2024/05/inteligencia-artificial-e-imaginacion-102327.jpg" where id<900;

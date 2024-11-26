@@ -31,8 +31,6 @@ const getArticlesBaseQuery = () => { // Query base para obtener información com
       SELECT
         JSON_ARRAYAGG(JSON_OBJECT(
           'position', c.position,
-          'createdDate', c.createdDate,
-          'updateDate', c.updateDate,
           'paragraph', c.paragraph,
           'img', c.img)
         )
