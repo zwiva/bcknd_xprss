@@ -187,7 +187,6 @@ const getLatest = async (user, number) => { // Devuelve los últimos "n" artícu
 const create = async (article, id_user) => { // Crea artículo si corresponde según el rol
   try {
     if (
-      !article.id_user ||
       !article.title ||
       !article.summary ||
       article.img === null || article.img === undefined ||
@@ -195,7 +194,7 @@ const create = async (article, id_user) => { // Crea artículo si corresponde se
       !article.id_section ||
       !article.content.length
     )
-      return handlerHttpResponse(400, null, 'Solicitud errónea. Se requieren las siguientes propiedades para crear un artículo: id_user, title, summary, img, urlRecomend, id_status, id_section, content');
+      return handlerHttpResponse(400, null, 'Solicitud errónea. Se requieren las siguientes propiedades para crear un artículo: title, summary, img, urlRecomend, id_status, id_section, content');
     if (article.content.some(content =>
       !content.position ||
       !content.paragraph ||
