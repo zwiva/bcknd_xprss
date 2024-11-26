@@ -25,8 +25,8 @@ const getAll = async () => {
 const getOne = async (id) => {
   try {
     id = Number(id);
-    if (isNaN(id))
-      return handlerHttpResponse(400, null, 'Solicitud errónea');
+    if (isNaN(id) || id < 1)
+      return handlerHttpResponse(400, null, 'Solicitud errónea. El "id" debe ser un número mayor a 0');
     const sql = `
     SELECT
       s.name,

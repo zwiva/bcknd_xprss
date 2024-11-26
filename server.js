@@ -1,7 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 
-import config from './src/config/config.js';
+import CONFIG from './src/config/config.js';
+import mysql from './src/shared/services/mysql.service.js';
 import { logRequest } from './src/middlewares/logger.middleware.js';
 
 const app = express();
@@ -35,7 +36,14 @@ app.post('/', (req, res) => {
   res.send(req.body);
 });
 
-// Listen
-app.listen(config.PORT, () => {
-  console.log(`App listening on port ${config.PORT}, environment ${config.ENVIRONMENT}`);
+// Init server
+const server = app.listen(CONFIG.PORT, async () => {
+  const isConnectionWorking = await mysql.verifyConnection();
+  if (!isConnectionWorking) {
+    server.close(() => {
+      process.exit(1);
+    });
+    return;
+  }
+  console.log(`App listening on port ${CONFIG.PORT}, environment ${CONFIG.ENVIRONMENT}`);
 });

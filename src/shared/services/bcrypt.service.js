@@ -1,9 +1,9 @@
 import { hash, compare } from 'bcrypt';
 
-import config from '../../config/config.js';
+import CONFIG from '../../config/config.js';
 
 const hashData = async (data) => {
-  return await hash(data, config.BCRYPT_SALT);
+  return await hash(data, CONFIG.BCRYPT_SALT);
 }
 
 const compareEncrypted = async (data, encrypted) => {

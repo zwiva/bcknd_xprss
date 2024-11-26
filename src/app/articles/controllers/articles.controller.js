@@ -20,13 +20,25 @@ const getLatest = async (req, res) => {
   res.status(response.status).json(response);
 }
 
-const getLatestBySection = async (req, res) => {
-  const response = await service.getLatestBySection(req.params.number);
+const getLatestFromEverySection = async (req, res) => {
+  const response = await service.getLatestFromEverySection(req.params.number);
   res.status(response.status).json(response);
 }
 
 const create = async (req, res) => {
-  const response = await service.create(req.body, req.user);
+  const response = await service.create(req.body);
+  res.status(response.status).json(response);
+}
+
+const update = async (req, res) => {
+  console.log('aquiiii', req.body);
+  const response = await service.update(req.params.id, req.body);
+  res.status(response.status).json(response);
+}
+
+const remove = async (req, res) => {
+  const response = await service.remove(req.params.id);
+  console.log('response ->', response);
   res.status(response.status).json(response);
 }
 
@@ -35,6 +47,8 @@ export default {
   getOne,
   getArticlesBySection,
   getLatest,
-  getLatestBySection,
-  create
+  getLatestFromEverySection,
+  create,
+  update,
+  remove
 }

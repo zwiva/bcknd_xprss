@@ -11,7 +11,7 @@ const TABLES = {
 const login = async (credentials) => {
   try {
     if (!credentials.email || !credentials.pass)
-      return handlerHttpResponse(400, null, 'Solicitud errónea.');
+      return handlerHttpResponse(400, null, 'Solicitud errónea. Se requieren las siguientes propiedades para login: email y pass');
     const sql = `
     SELECT
       u.id,
