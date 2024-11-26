@@ -75,7 +75,8 @@ const getOne = async (id_user) => {
 
 const create = async (user) => {
   try {
-    await Promise.all([createPerson(user), createUser(user)]);
+    const id_person = await createPerson(user);
+    await createUser(user, id_person);
     return handlerHttpResponse(201);
   } catch (e) {
     return handlerHttpResponse(409, null, `${e} at create method on users.service file.`);
@@ -89,51 +90,46 @@ const createPerson = async (person) => {
       name,
       lastname,
       surname,
-      rut,
-      email
+      rut
     ) VALUES (
-      ?,
       ?,
       ?,
       ?,
       ?
     );`;
-    await mysql.query(
-      sql,
-      [
-        person.name,
-        person.lastname,
-        person.surname,
-        person.rut,
-        person.email
-      ]
-    );
+    const { insertId } = await mysql.query(sql, [
+      person.name,
+      person.lastname,
+      person.surname,
+      person.rut
+    ]);
+    return insertId;
   } catch (e) {
     throw new Error(e);
   }
 }
 
-const createUser = async (user) => {
+const createUser = async (user, id_person) => {
   const pass = await bcrypt.hashData(user.pass);
   try {
     const sql = `
     INSERT INTO ${TABLES.USER} (
+      id_role,
+      id_person,
       email,
-      pass,
-      id_role
+      pass
     ) VALUES (
+      ?,
       ?,
       ?,
       ?
     );`;
-    await mysql.query(
-      sql,
-      [
-        user.email,
-        pass,
-        user.id_role
-      ]
-    );
+    await mysql.query(sql, [
+      user.id_role,
+      id_person,
+      user.email,
+      pass
+    ]);
   } catch (e) {
     throw new Error(e);
   }

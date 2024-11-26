@@ -184,7 +184,7 @@ const getLatest = async (user, number) => { // Devuelve los últimos "n" artícu
   }
 }
 
-const create = async (article) => { // Crea artículo si corresponde según el rol
+const create = async (article, id_user) => { // Crea artículo si corresponde según el rol
   try {
     if (
       !article.id_user ||
@@ -222,7 +222,7 @@ const create = async (article) => { // Crea artículo si corresponde según el r
       ?
     )`;
     const { insertId } = await mysql.query(sql, [
-      article.id_user,
+      id_user,
       article.title,
       article.summary,
       article.img,
