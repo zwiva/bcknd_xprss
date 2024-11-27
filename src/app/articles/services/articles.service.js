@@ -24,6 +24,7 @@ const getArticlesBaseQuery = () => { // Query base para obtener información com
     a.urlRecomend,
     a.id_status,
     a.id_section,
+    a.id_user,
     CONCAT(p.name, " ", p.lastname, " ", p.surname) author,
     st.name status,
     se.name section,
@@ -195,12 +196,13 @@ const create = async (article, id_user) => { // Crea artículo si corresponde se
       !article.content.length
     )
       return handlerHttpResponse(400, null, 'Solicitud errónea. Se requieren las siguientes propiedades para crear un artículo: title, summary, img, urlRecomend, id_section, content');
-    if (article.content.some(content =>
-      !content.position ||
-      !content.paragraph ||
-      content.img === null || content.img === undefined
-    ))
-      return handlerHttpResponse(400, null, 'Solicitud errónea. Se requieren las siguientes propiedades para crear el contenido de un artículo: position, paragraph, img');
+    // if (article.content.some(content =>
+    //   !content.position ||
+    //   !content.paragraph ||
+    //   content.img === null || content.img === undefined
+    // ))
+    //   return handlerHttpResponse(400, null, 'Solicitud errónea. Se requieren las siguientes propiedades para crear el contenido de un artículo: position, paragraph, img');
+    
     const sql = `INSERT INTO
       ${TABLES.ARTICLE}
     (
