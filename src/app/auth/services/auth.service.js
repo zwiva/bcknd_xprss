@@ -40,9 +40,8 @@ const register = async (user) => {
   try {
     const response = await usersService.create(user);
     if (!response.isSuccess)
-      return handlerHttpResponse(409, null, 'Error en la creación de usuario.');
-    const { email, pass } = user;
-    return await login({ email, pass });
+      return handlerHttpResponse(409, null, 'Error en el registro de usuario');
+    return response;
   } catch (e) {
     return handlerHttpResponse(409, null, `${e} at register method on auth.service file.`);
   }
