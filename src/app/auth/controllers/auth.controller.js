@@ -5,7 +5,7 @@ const login = async (req, res) => {
   res.status(response.status).json(response);
 }
 
-const register = async () => {
+const register = async (req, res) => {
   const response = await service.register(req.body);
   res.status(response.status).json(response);
 }
