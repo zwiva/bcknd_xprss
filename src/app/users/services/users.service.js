@@ -138,15 +138,14 @@ const createUser = async (user, id_person) => {
 const update = async (id, user) => { // WIP
   try {
     if (
-      !user.id_user ||
       !user.name ||
       !user.lastname ||
       !user.surname ||
       !user.rut ||
       !user.email ||
-      !user.id_role 
+      !user.id_role
     )
-      return handlerHttpResponse(400, null, 'Solicitud errónea. Se requieren las siguientes propiedades para editar un usuario id_user, name, lastname, surname, rut, email, id_role');
+      return handlerHttpResponse(400, null, 'Solicitud errónea. Se requieren las siguientes propiedades para editar un usuario name, lastname, surname, rut, email, id_role');
     id = Number(id);
     if (!id || isNaN(id))
       return handlerHttpResponse(400, null, 'Solicitud errónea. El "id" debe ser un número mayor a 0');

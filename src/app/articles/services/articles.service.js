@@ -267,13 +267,13 @@ const update = async (id, article) => { // Actualiza un artículo insertando nue
       !article.id_section ||
       !article.content.length
     )
-      return handlerHttpResponse(400, null, 'Solicitud errónea. Se requieren las siguientes propiedades para crear un artículo: id_user, title, summary, img, urlRecomend, id_status, id_section, content');
+      return handlerHttpResponse(400, null, 'Solicitud errónea. Se requieren las siguientes propiedades para editar un artículo: id_user, title, summary, img, urlRecomend, id_status, id_section, content');
     if (article.content.some(content =>
       !content.position ||
       !content.paragraph ||
       content.img === null || content.img === undefined
     ))
-      return handlerHttpResponse(400, null, 'Solicitud errónea. Se requieren las siguientes propiedades para crear el contenido de un artículo: position, paragraph, img');
+      return handlerHttpResponse(400, null, 'Solicitud errónea. Se requieren las siguientes propiedades para editar el contenido de un artículo: position, paragraph, img');
     id = Number(id);
     if (!id || isNaN(id))
       return handlerHttpResponse(400, null, 'Solicitud errónea. El "id" debe ser un número mayor a 0');

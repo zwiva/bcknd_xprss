@@ -31,14 +31,12 @@ const create = async (req, res) => {
 }
 
 const update = async (req, res) => {
-  console.log('aquiiii', req.body);
   const response = await service.update(req.params.id, req.body);
   res.status(response.status).json(response);
 }
 
 const remove = async (req, res) => {
   const response = await service.remove(req.params.id);
-  console.log('response ->', response);
   res.status(response.status).json(response);
 }
 
