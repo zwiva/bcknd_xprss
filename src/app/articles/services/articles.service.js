@@ -192,8 +192,7 @@ const create = async (article, id_user) => { // Crea artículo si corresponde se
       !article.summary ||
       article.img === null || article.img === undefined ||
       !article.urlRecomend ||
-      !article.id_section ||
-      !article.content.length
+      !article.id_section
     )
       return handlerHttpResponse(400, null, 'Solicitud errónea. Se requieren las siguientes propiedades para crear un artículo: title, summary, img, urlRecomend, id_section, content');
     // if (article.content.some(content =>

@@ -1,3 +1,4 @@
+import CONFIG from '../../../config/config.js';
 import mysql from '../../../shared/services/mysql.service.js';
 import bcrypt from '../../../shared/services/bcrypt.service.js';
 import { handlerHttpResponse } from '../../../shared/services/utils.service.js';
@@ -30,7 +31,9 @@ const getAll = async () => {
     INNER JOIN
       ${TABLES.ROLE} r
     ON
-      r.id = u.id_role;
+      r.id = u.id_role
+    WHERE
+      u.id_status = ${CONFIG.DB_STATUS_ACTIVE_ID};
     `;
     const queryResult = await mysql.query(sql);
     return handlerHttpResponse(200, queryResult);
@@ -39,8 +42,11 @@ const getAll = async () => {
   }
 }
 
-const getOne = async (id_user) => {
+const getOne = async (id) => {
   try {
+    id = Number(id);
+    if (!id || isNaN(id))
+      return handlerHttpResponse(400, null, 'Solicitud errónea. El "id" debe ser un número mayor a 0');
     const sql = `
     SELECT
       u.email,
@@ -61,13 +67,15 @@ const getOne = async (id_user) => {
     ON
       r.id = u.id_role
     WHERE
-      u.id = ?;
+      u.id = ?
+    AND
+      u.id_status = ${CONFIG.DB_STATUS_ACTIVE_ID};
     `;
-    const queryResult = await mysql.query(sql, [id_user]);
+    const queryResult = await mysql.query(sql, [id]);
     const result = queryResult.length && queryResult[0];
-    if (!result?.id_role || !result?.id_person)
+    if (!result?.email || !result?.id_role || !result?.id_person || !result?.name || !result?.lastname || !result?.surname || !result?.role)
       return handlerHttpResponse(404, null, 'Usuario no encontrado.');
-    return handlerHttpResponse(200, { ...result, id_user });
+    return handlerHttpResponse(200, { ...result, id });
   } catch (e) {
     return handlerHttpResponse(409, null, `${e} at getOne method on users.service file.`);
   }
@@ -75,6 +83,16 @@ const getOne = async (id_user) => {
 
 const create = async (user) => {
   try {
+    if (
+      !user.id_role ||
+      !user.email ||
+      !user.pass ||
+      !user.name ||
+      !user.lastname ||
+      !user.surname ||
+      !user.rut
+    )
+      return handlerHttpResponse(400, null, 'Solicitud errónea. Se requieren las siguientes propiedades para crear un usuario: id_role, email, pass, name, lastname, surname y rut');
     const id_person = await createPerson(user);
     await createUser(user, id_person);
     return handlerHttpResponse(201);
@@ -137,52 +155,69 @@ const createUser = async (user, id_person) => {
 
 const update = async (id, user) => { // WIP
   try {
-    if (
-      !user.name ||
-      !user.lastname ||
-      !user.surname ||
-      !user.rut ||
-      !user.email ||
-      !user.id_role
-    )
-      return handlerHttpResponse(400, null, 'Solicitud errónea. Se requieren las siguientes propiedades para editar un usuario name, lastname, surname, rut, email, id_role');
     id = Number(id);
     if (!id || isNaN(id))
       return handlerHttpResponse(400, null, 'Solicitud errónea. El "id" debe ser un número mayor a 0');
-    const sql = `
-    UPDATE
-      ${TABLES.USER}
-    SET
-      id_user = ?,
-      name = ?,
-      lastname = ?,
-      surname = ?,
-      rut = ?,
-      email = ?,
-      id_role = ?
-    WHERE
-      id = ?;
-    `;
-    await mysql.query(sql, [
-      user.id_user,
-      user.name,
-      user.lastname,
-      user.surname,
-      user.rut,
-      user.email,
-      user.id_role,
-      id
-    ]);
-    // await removeContentForUpdate(id);???
-    // for (let content of user.content)
-    //   await insertContentForuser(content, id);
+    if (
+      !user.id_role ||
+      !user.name ||
+      !user.lastname ||
+      !user.surname ||
+      !user.rut
+    )
+      return handlerHttpResponse(400, null, 'Solicitud errónea. Se requieren las siguientes propiedades para crear un usuario: id_role, email, pass, name, lastname, surname y rut');
+    const { status, isSuccess, message, data } = await getOne(id);
+    if (!isSuccess)
+      return handlerHttpResponse(status, null, message);
+    await Promise.all([updateUser(id, user), updatePerson(data.id_person, user)]);
     return handlerHttpResponse(200);
   } catch (e) {
     return handlerHttpResponse(409, null, `${e} at update method on users.service file.`);
   }
 }
 
-const remove = async (id) => { // WIP
+const updateUser = async (id, user) => {
+  try {
+    const sql = `
+    UPDATE
+      ${TABLES.USER}
+    SET
+      id_role = ?
+    WHERE
+      id = ?;
+    `;
+    await mysql.query(sql, [user.id_role, id]);
+  } catch (e) {
+    throw new Error(e);
+  }
+}
+
+const updatePerson = async (id, user) => {
+  try {
+    const sql = `
+    UPDATE
+      ${TABLES.PERSON}
+    SET
+      name = ?,
+      lastname = ?,
+      surname = ?,
+      rut = ?
+    WHERE
+      id = ?;
+    `;
+    await mysql.query(sql, [
+      user.name,
+      user.lastname,
+      user.surname,
+      user.rut,
+      id
+    ]);
+  } catch (e) {
+    throw new Error(e);
+  }
+}
+
+const remove = async (id) => {
   try {
     id = Number(id);
     if (!id || isNaN(id))
@@ -201,7 +236,6 @@ const remove = async (id) => { // WIP
     return handlerHttpResponse(409, null, `${e} at remove method on users.service file.`);
   }
 }
-
 
 export default {
   getAll,

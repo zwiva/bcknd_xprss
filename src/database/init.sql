@@ -38,6 +38,7 @@ CREATE TABLE USER (
   id INT NOT NULL AUTO_INCREMENT,
   id_role INT NOT NULL,
   id_person INT NOT NULL,
+  id_status INT NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
   pass VARCHAR(255) NOT NULL,
   CONSTRAINT PK_user PRIMARY KEY (id),
@@ -108,11 +109,13 @@ INSERT INTO PERSON (
 );
 
 INSERT INTO USER (
-   id_role ,
-   id_person ,
-   email ,
-   pass 
+  id_role ,
+  id_person ,
+  id_status ,
+  email ,
+  pass 
 ) VALUES (
+  1,
   1,
   1,
   'andrea@mail.cl',

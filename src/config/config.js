@@ -1,4 +1,4 @@
-const config = {
+const CONFIG = {
   // APP
   ENVIRONMENT: process.env.ENVIRONMENT ?? 'local',
   PORT: process.env.PORT ?? 3000,
@@ -25,4 +25,4 @@ const config = {
   BCRYPT_SALT: 5
 };
 
-export default config;
+export default CONFIG;

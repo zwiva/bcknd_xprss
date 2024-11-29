@@ -5,6 +5,11 @@ const getAll = async (_, res) => {
   res.status(response.status).json(response);
 }
 
+const getOne = async (req, res) => {
+  const response = await service.getOne(req.params.id);
+  res.status(response.status).json(response);
+}
+
 const create = async (req, res) => {
   const response = await service.create(req.body);
   res.status(response.status).json(response);
@@ -22,6 +27,7 @@ const remove = async (req, res) => {
 
 export default {
   getAll,
+  getOne,
   create,
   update,
   remove
