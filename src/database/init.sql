@@ -43,6 +43,7 @@ CREATE TABLE USER (
   pass VARCHAR(255) NOT NULL,
   CONSTRAINT PK_user PRIMARY KEY (id),
   CONSTRAINT FK_user_idrole_role_id FOREIGN KEY (id_role) references ROLE(id),
+  CONSTRAINT FK_user_idstatus_status_id FOREIGN KEY (id_status) references STATUS(id),
   CONSTRAINT FK_user_idperson_person_id FOREIGN KEY (id_person) references PERSON(id)
 ) ENGINE=InnoDB;
 
