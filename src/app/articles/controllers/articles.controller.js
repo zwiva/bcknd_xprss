@@ -26,7 +26,7 @@ const getLatestFromEverySection = async (req, res) => {
 }
 
 const create = async (req, res) => {
-  const response = await service.create(req.body, req.user.id_user);
+  const response = await service.create(req.body, req.body.id_user);
   res.status(response.status).json(response);
 }
 
