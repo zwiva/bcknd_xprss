@@ -704,6 +704,8 @@ INSERT INTO CONTENT (
 (4, "La feria reunirá a las empresas y startups más innovadoras, ofreciendo una oportunidad para explorar nuevas herramientas, productos y soluciones basadas en IA, con demostraciones en vivo y charlas de expertos.", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpwY-iNa5lT2qh3UHjHCdfJ-Upqa-YIYtj1Tj4z7UO_1E1LJ8aMVTUbtyk4wBVPZFexYw&usqp=CAU", 50);
 
 
+UPDATE ARTICLE SET img = "https://controlpublicidad.com/wp-content/uploads/2024/05/inteligencia-artificial-e-imaginacion-102327.jpg" where id<900;
+
 /* SELECTS */
 
 SELECT
@@ -751,5 +753,3 @@ INNER JOIN
   SECTION se
 ON
   se.id = a.id_section;
-
-UPDATE ARTICLE SET img = "https://controlpublicidad.com/wp-content/uploads/2024/05/inteligencia-artificial-e-imaginacion-102327.jpg" where id<900;
