@@ -13,7 +13,7 @@ const getAll = async () => {
   try {
     const sql = `
     SELECT
-      u.id id_user,
+      u.id,
       u.email,
       u.id_role,
       p.id id_person,
