@@ -134,9 +134,11 @@ const createUser = async (user, id_person) => {
     INSERT INTO ${TABLES.USER} (
       id_role,
       id_person,
+      id_status,
       email,
       pass
     ) VALUES (
+      ?,
       ?,
       ?,
       ?,
@@ -145,6 +147,7 @@ const createUser = async (user, id_person) => {
     await mysql.query(sql, [
       user.id_role,
       id_person,
+      CONFIG.DB_STATUS_ACTIVE_ID,
       user.email,
       pass
     ]);
