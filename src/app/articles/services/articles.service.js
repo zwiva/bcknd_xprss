@@ -194,7 +194,7 @@ const create = async (article, id_user) => { // Crea artículo si corresponde se
       !article.urlRecomend ||
       !article.id_section
     )
-      return handlerHttpResponse(400, null, 'Solicitud errónea. Se requieren las siguientes propiedades para crear un artículo: title, summary, img, urlRecomend, id_section, content');
+      return handlerHttpResponse(400, null, 'Solicitud errónea. Se requieren las siguientes propiedades para crear un artículo: Título, Resumen, Url imagen principal, Enlace complementario, y/o Sección');
     // if (article.content.some(content =>
     //   !content.position ||
     //   !content.paragraph ||
